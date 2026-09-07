@@ -9,8 +9,12 @@ jobs:
       - name: Build the App
         run: |
           xcodebuild clean build -project DS3Activator.xcodeproj -scheme DS3Activator -configuration Release CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO CONFIGURATION_BUILD_DIR=${{ github.workspace }}/build
+      - name: App richtig verpacken
+        run: |
+          cd ${{ github.workspace }}/build
+          zip -r DS3Activator-MacApp.zip DS3Activator.app
       - name: Upload Application
         uses: actions/upload-artifact@v4
         with:
           name: DS3Activator-App
-          path: ${{ github.workspace }}/build/DS3Activator.app
+          path: ${{ github.workspace }}/build/DS3Activator-MacApp.zip
