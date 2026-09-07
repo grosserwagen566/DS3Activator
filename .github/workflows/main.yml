@@ -5,19 +5,11 @@ jobs:
     runs-on: macos-14
     steps:
       - uses: actions/checkout@v4
-      - name: Build App Direct
+      - name: Compile with Swift
         run: |
-          xcodebuild -project DS3Activator.xcodeproj \
-                     -scheme DS3Activator \
-                     -configuration Release \
-                     -derivedDataPath build/ \
-                     CODE_SIGN_IDENTITY="" \
-                     CODE_SIGNING_REQUIRED=NO \
-                     CODE_SIGNING_ALLOWED=NO
-          
-          mkdir -p build/app
-          cp -r build/Build/Products/Release/DS3Activator.app build/app/
+          mkdir -p build
+          swiftc -framework AppKit -framework IOKit -framework UserNotifications $(find DS3Activator -name "*.swift") -o build/DS3Activator
       - uses: actions/upload-artifact@v4
         with:
-          name: DS3Activator-macOS
-          path: build/app/DS3Activator.app
+          name: DS3Activator-Executable
+          path: build/DS3Activator
