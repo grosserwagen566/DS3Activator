@@ -1,16 +1,16 @@
-name: Build DS3Activator
+name: Build macOS App
 on: [workflow_dispatch]
 jobs:
   build:
-    runs-on: macos-14
+    runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Build Executable
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Build the App
         run: |
-          mkdir -p build
-          swift build -c release
-          cp .build/release/DS3Activator build/ 2>/dev/null || cp .build/release/DS3Activator-Executable build/ 2>/dev/null || find .build -type f -name "DS3Activator" -exec cp {} build/ \;
-      - uses: actions/upload-artifact@v4
+          xcodebuild clean build -project DS3Activator.xcodeproj -scheme DS3Activator -configuration Release CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO CONFIGURATION_BUILD_DIR=${{ github.workspace }}/build
+      - name: Upload Application
+        uses: actions/upload-artifact@v4
         with:
-          name: DS3Activator-Executable
-          path: build/
+          name: DS3Activator-App
+          path: ${{ github.workspace }}/build/DS3Activator.app
