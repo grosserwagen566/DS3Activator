@@ -1,0 +1,16 @@
+name: Build DS3Activator
+on: [workflow_dispatch]
+jobs:
+  build:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build App
+        run: |
+          xcodebuild -project DS3Activator.xcodeproj -scheme DS3Activator -configuration Release CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO archive -archivePath build/DS3Activator.xcarchive
+          mkdir -p build/app
+          cp -r build/DS3Activator.xcarchive/Products/Applications/DS3Activator.app build/app/
+      - uses: actions/upload-artifact@v4
+        with:
+          name: DS3Activator-macOS
+          path: build/app/DS3Activator.app
